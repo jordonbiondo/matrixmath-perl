@@ -1,4 +1,4 @@
-package Matrixmath;
+package MatrixMath;
 use Mojo::Base 'Mojolicious';
 
 use Mojo::Pg;

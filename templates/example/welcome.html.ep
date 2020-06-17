@@ -1,10 +1,100 @@
 % layout 'default';
-% title 'Welcome';
-<h1><%= $header %></h1>
-<h1><%= $message %></h1>
-<p>
-  This page was generated from the template "templates/example/welcome.html.ep"
-  and the layout "templates/layouts/default.html.ep",
-  <%= link_to 'click here' => url_for %> to reload the page or
-  <%= link_to 'here' => '/index.html' %> to move forward to a static page.
-</p>
+% title 'Matrix Analyzer';
+
+<div class="row">
+    <div class="panel large-10 large-offset-1 columns">
+
+        <h3 class="">Input</h3>
+        <hr/>
+
+        <!-- Size area -->
+        <div class="row">
+            <div class="large-4 columns large-offset-4">
+                <form id="sizeForm" >
+                    <div class="row">
+                        <div class="small-2 large-2 columns">
+                            <h4 class="centerToInput">Size</h4>
+                        </div>
+                        <div class="small-4 large-4 columns">
+                            <input type="number" min="1" placeholder="3" id="matrixHeightInput"/>
+                        </div>
+                        <div class="small-2 large-2 columns text-center">
+                            <h4 class="centerToInput">
+                                &times;
+                            </h4></div>
+                        <div class="small-4 large-4 columns">
+                            <input type="number" min="1" placeholder="3" id="matrixWidthInput"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><!-- size area  -->
+
+
+        <!-- My Alert -->
+        <div class="row">
+            <div data-alert id="myAlert" class="hide large-6 large-offset-3 alert-box  fade">
+                <strong>Oops!</strong> There is a problem with your matrix data!
+                <a href="#" onclick="$('#myAlert').hide()" class="close">&times;</a>
+            </div>
+        </div>
+
+        <!-- My Server Alert -->
+        <div class="row">
+            <div data-alert id="myErrorAlert"
+                class="hide large-6 large-offset-3 alert-box warning fade">
+                <h2>Oops!</h2>
+                <p> We had trouble processing your matrix!</p>
+                <a href="#" onclick="$('#myErrorAlert').hide()" class="close">&times;</a>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="large-6 small-12 columns text-center">
+                <form id="inputMatrixForm">
+                    <h4 class="text-center">Input Matrix: A</h4>
+                    <table class="matrixTable" id="inputMatrix">
+                    </table>
+                </form>
+            </div>
+
+            <div class="large-6 large-offset-0 small-12 columns"  id="computeButtonDiv">
+
+                <button id="computeButton"  class="has-spinner middle" onclick="trySendMatrix()">
+                    <span id="computeSpinner" class="glyphicon glyphicon-refresh"></span>
+                    Compute
+                </button>
+            </div>
+        </div>
+        <h3 class="" id="outputStart">Output</h3>
+        <hr/>
+        <div class="row">
+            <div class="small-12 large-4 columns text-center">
+                <h4 class="text-center">RREF</h4>
+                <table class="matrixTable" id="rrefMatrix">
+                </table>
+            </div>
+
+            <div class="large-4 small-12 columns text-center">
+                <h4 class="text-center">A<sup>-1</sup> (inverse)</h4>
+                <table class="matrixTable" id="inverseMatrix">
+                </table>
+            </div>
+
+            <div class="large-4 small-12 columns text-center">
+                <div id="detArea">
+                    <h4 class="text-center">Determinant</h4>
+                    <input class="text-center"
+                        id="detValue"
+                        disabled="true"
+                        readonly="readonly"/>
+                </div>
+            </div>
+        </div>
+
+        <ul id="matrixInfo" class="list-group">
+
+        </ul>
+    </div>
+</div>
