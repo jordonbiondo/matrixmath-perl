@@ -1,0 +1,9 @@
+FROM mmp_base:1.0.0
+
+COPY . /var/www/mmp
+
+WORKDIR /var/www/mmp
+
+EXPOSE 3000;
+
+CMD ["morbo", "/var/www/mmp/script/matrixmath"]
