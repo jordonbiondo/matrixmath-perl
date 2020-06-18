@@ -16,8 +16,11 @@ sub startup {
   # Router
   my $r = $self->routes;
 
-  # Normal route to controller
+  # Render the home page
   $r->get('/')->to('example#welcome');
+
+  # Post to /compute to analyze matrix
+  $r->post('/compute')->to('example#compute');
 }
 
 1;
