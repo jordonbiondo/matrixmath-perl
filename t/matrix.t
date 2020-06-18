@@ -7,24 +7,24 @@ use warnings;
 use Mojo::File qw(curfile);
 use lib curfile->dirname->sibling('lib')->to_string;
 
+
 # QoL alias for constructor
 sub MX {
   new MatrixMath::Logic::Matrix(@_);
 }
 
 ###################
-#    BEGIN TEST   #
+#   BEGIN TESTS   #
 ###################
 
 # Module
 require_ok( 'MatrixMath::Logic::Matrix' );
 
-
-my $asdf = MX([[1, 2], [3, 4], [5, 6]]);
+my $testMatrix = MX([[1, 2], [3, 4], [5, 6]]);
 
 # New
-ok($asdf->{data}, 'Constructor creates data');
-is(@{@{$asdf->{data}}[1]}[1], 4, 'Constructor populates data');
+ok($testMatrix->{data}, 'Constructor creates data');
+is(@{@{$testMatrix->{data}}[1]}[1], 4, 'Constructor populates data');
 
 # Value At
 is(MX([[1, 2], [3, 4], [5, 6]])->value_at(0, 0), 1, 'value at returns the value at the given coordinates');
@@ -38,7 +38,7 @@ is($set_value_at_matrix, $set_value_at_output, 'set_value_at returns self');
 is($set_value_at_matrix->value_at(1, 1), 10, 'set_value_at sets the value at the given coordinates');
 
 # Copy
-is_deeply((\@{$asdf->{data}}), (\@{$asdf->copy->{data}}), 'copy duplicates all matrix values');
+is_deeply((\@{$testMatrix->{data}}), (\@{$testMatrix->copy->{data}}), 'copy duplicates all matrix values');
 
 # Equals
 ok(MX([[]])->equals(MX[[]]), 'equals returns truthy when matrix data is equal');
@@ -48,12 +48,11 @@ ok(!MX([[1]])->equals(MX[[2]]), 'equals returns falsey when matrix data is not e
 ok(!MX([[1]])->equals(MX[[1, 1]]), 'equals returns falsey when matrix data is not equal');
 ok(!MX([[1, 2, 3], [4, 5, 6]])->equals(MX[[1, 2, 3], [4, 5, 6.1]]), 'equals returns falsey when matrix data is not equal');
 
-
 # Height
 is(MX([[1, 2], [3, 4], [5, 6]])->height, 3, 'height returns matrix height');
 is(MX([])->height, 0, 'height returns matrix height when empty');
 
-# Height
+# Width
 is(MX([[1, 2], [3, 4], [5, 6]])->width, 2, 'width returns matrix width');
 is(MX([[]])->width, 0, 'width returns matrix width when empty');
 
@@ -77,7 +76,6 @@ isnt(@{$scale_matrix->{data}}[1], @{$scale_matrix->scaled->{data}}[1], 'scaled d
 # Negated
 ok(MX([[1, 2], [3.2, 4]])->negated->equals(MX([[-1, -2], [-3.2, -4]])), 'negated scales a matrix by a factor of -1');
 
-
 # Added
 is_deeply(
   \@{MX([[1, 2], [3, 4]])->added(MX([[0, -1], [10, 0.3]]))->{data}},
@@ -91,7 +89,6 @@ $add_matrix2->added($add_matrix1);
 is($add_matrix1->value_at(1, 1), 4, 'added does not mutate the input matrices');
 is($add_matrix2->value_at(1, 1), 10, 'added does not mutate the input matrices');
 
-
 # Subbed
 is_deeply(
   \@{MX([[1, 2], [3, 4]])->subbed(MX([[0, -1], [10, 0.3]]))->{data}},
@@ -99,7 +96,7 @@ is_deeply(
   'subbed returns a new matrix with values from one subtracted from the other'
  );
 
-# Rref
+# RREF
 is_deeply(
   MX(
     [[1, 2, 3],
@@ -137,6 +134,5 @@ is_deeply(
    ),
   'rref computes the reduced row echelon form of the matrix'
  );
-
 
 done_testing();
