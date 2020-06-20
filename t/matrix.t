@@ -193,6 +193,11 @@ is_deeply(
   'concat_horizontal returns undef matrices do not have the same height'
  );
 
+#Is Invertible
+ok(MX([[1, 2], [3, 4]])->is_invertible, 'is_invertible returns truthy when the matrix can be inverted');
+ok(!MX([[1, 2], [2, 4]])->is_invertible, 'is_invertible return falsey when the matrix can be inverted');
+ok(!MX([[1, 2], [3, 4], [5, 6]])->is_invertible, 'is_invertible return falsey when the matrix can be inverted');
+
 done_testing();
 
 

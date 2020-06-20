@@ -215,7 +215,7 @@ sub augmented {
 
 sub is_invertible {
   my $self = shift;
-  return undef unless $self.is_square;
+  return undef unless $self->is_square;
 
   return $self->rref->equals(
     MatrixMath::Logic::Matrix->identity($self->height)
