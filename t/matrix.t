@@ -1,5 +1,6 @@
 use Mojo::Base -strict;
 use Test::More;
+use Data::Dumper;
 
 use strict;
 use warnings;
@@ -25,6 +26,15 @@ my $testMatrix = MX([[1, 2], [3, 4], [5, 6]]);
 # New
 ok($testMatrix->{data}, 'Constructor creates data');
 is(@{@{$testMatrix->{data}}[1]}[1], 4, 'Constructor populates data');
+
+#Zero
+is_deeply(MatrixMath::Logic::Matrix->zero(2, 3), MX([[0, 0], [0, 0], [0, 0]]), 'zero constructs a zero filled matrix of the given width and height');
+is_deeply(MatrixMath::Logic::Matrix->zero(1, 1), MX([[0]]), 'zero constructs a zero filled matrix of the given width and height');
+
+#Identity
+is_deeply(MatrixMath::Logic::Matrix->zero(2, 3), MX([[0, 0], [0, 0], [0, 0]]), 'identity constructs an identity matrix of the given size');
+is_deeply(MatrixMath::Logic::Matrix->zero(1, 1), MX([[0]]), 'identity constructs an identity matrix of the given size');
+
 
 # Value At
 is(MX([[1, 2], [3, 4], [5, 6]])->value_at(0, 0), 1, 'value at returns the value at the given coordinates');
@@ -135,4 +145,54 @@ is_deeply(
   'rref computes the reduced row echelon form of the matrix'
  );
 
+# Is Square
+ok(!MX([[1, 2], [3, 4], [5, 6]])->is_square, 'is_square returns falsey when matrix is not square');
+ok(MX([[1, 2], [3, 4]])->is_square, 'is_square returns truthy when matrix is square');
+ok(MX([])->is_square, 'is_square returns truthy when matrix is empty');
+
+#Is Row Equivalent
+ok(MX(
+  [[1, 2, 3],
+   [2, 1, 1],
+   [4, 9, 4]]
+ )->is_row_equivalent(
+   MX(
+     [[1, 2, 3],
+      [2, 1, 1],
+      [8, 18, 8]]
+    )
+  ),
+'is_row_equivalent returns true when matrices share row equivilence');
+
+ok(!MX(
+  [[1, 2, 3],
+   [2, 1, 1],
+   [4, 9, 4]]
+ )->is_row_equivalent(
+   MX(
+     [[1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3]]
+    )
+  ),
+'is_row_equivalent returns falsey when matrices do not share row equivilence');
+
+#Augmented
+is_deeply(MX([[1, 2], [3, 4]])->augmented, MX([[1, 2, 0], [3, 4, 0]]), 'augmented adds a zero column to the end of the matrix');
+is_deeply(MX([[1]])->augmented, MX([[1, 0]]), 'augmented adds a zero column to the end of the matrix');
+
+#Concat Horizontal
+is_deeply(
+  MX([[1, 2], [3, 4]])->concat_horizontal(MX([[3, 4], [5, 6]])),
+  MX([[1, 2, 3, 4], [3, 4, 5, 6]]),
+  'concat_horizontal concatenates matrix rows horizontally'
+ );
+is_deeply(
+  MX([[1, 2], [3, 4]])->concat_horizontal(MX([[3, 4], [5, 6], [7, 8]])),
+  undef,
+  'concat_horizontal returns undef matrices do not have the same height'
+ );
+
 done_testing();
+
+

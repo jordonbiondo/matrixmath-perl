@@ -1,20 +1,22 @@
 package MatrixMath::Logic::Matrix;
 use Data::Dumper;
+use List::Util qw(any all);
 use Mojo::Log;
 use strict;
 use warnings;
 
 use Mojo::Util qw(secure_compare);
 
+#
+# Constructor, receives matrix data as a 2d array, inner arrays represent rows;
+#
 sub new {
   my $class = shift;
-  my $self = {
-    data => shift
-   };
+  my $self = { data => shift };
 
   for (@{$self->{data}}) {
     if (scalar @$_!= scalar @{@{$self->{data}}[0]}) {
-      warn "Matrix data is not square";
+      warn "Matrix should not be initialized with different sized rows";
     }
   }
 
@@ -22,12 +24,35 @@ sub new {
   return $self;
 }
 
+#
+# Alternate constructor, returns a matrix of a given width and height filled with zeros
+#
+sub zero {
+  my $class = shift;
+  my ($width, $height) = (shift, shift);
+  my $data = [map {[(0) x $width]} 1..$height];
+  MatrixMath::Logic::Matrix->new([map {[(0) x $width]} 1..$height]);
+}
+
+sub identity {
+  my $class = shift;
+  my $size = shift;
+  my $matrix = MatrixMath::Logic::Matrix->zero($size, $size);
+  for (my $s = 0; $s < scalar @{$matrix->{data}}; $s++) {
+    $matrix->set_value_at($s, $s, 1);
+  }
+  return $matrix
+}
+
 sub _is_zero_row {
-  # TODO
+  my $row = shift;
+  return all {$_ == 0} @$row;
 }
 
 sub _is_no_solution_row {
-  # TODO
+  my $row = shift;
+  return undef unless _is_zero_row([@$row[0..scalar(@$row - 2)]]);
+  return @$row[scalar @$row - 1] != 0;
 }
 
 sub value_at {
@@ -67,7 +92,11 @@ sub height {
 
 sub width {
   my ($self) = (shift);
-  return scalar @{@{$self->{data}}[0]};
+  my $row = @{$self->{data}}[0];
+  if ($row) {
+    return scalar @{@{$self->{data}}[0]};
+  }
+  return 0;
 }
 
 sub size {
@@ -162,6 +191,59 @@ sub rref {
   }
 
   return $copied;
+}
+
+sub is_square {
+  my $self = shift;
+  $self->height == $self->width;
+}
+
+sub is_row_equivalent {
+  my ($self, $other) = (shift, shift);
+  return undef unless $self->size_equals($other);
+
+  return $self->rref->equals($other->rref);
+}
+
+sub augmented {
+  my $output = shift->copy;
+  for (@{$output->{data}}) {
+    push @$_, 0;
+  }
+  $output;
+}
+
+sub is_invertible {
+  my $self = shift;
+  return undef unless $self.is_square;
+
+  return $self->rref->equals(
+    MatrixMath::Logic::Matrix->identity($self->height)
+     );
+}
+
+sub concat_horizontal {
+  my ($self, $other) = (shift, shift);
+  my $output = $self->copy;
+
+  return undef unless $self->height == $other->height;
+
+  for (my $y = 0; $y < $output->height; $y++) {
+    my $newRow = [@{@{$output->{data}}[$y]}, @{@{$other->{data}}[$y]}];
+    @{$output->{data}}[$y] = $newRow;
+  }
+  return $output;
+}
+
+sub inverse {
+  my $self = shift;
+  return undef unless $self->is_invertible;
+
+  my $size = $self->height;
+  my $identity_matrix = MatrixMath::Logic::Matrix->identity($size);
+
+  return $self.concat_horizontal($identity_matrix)->rref
+
 }
 
 sub to_string {
