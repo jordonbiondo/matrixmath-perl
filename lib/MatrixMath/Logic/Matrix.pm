@@ -239,11 +239,14 @@ sub inverse {
   my $self = shift;
   return undef unless $self->is_invertible;
 
-  my $size = $self->height;
-  my $identity_matrix = MatrixMath::Logic::Matrix->identity($size);
+  my $identity_matrix = MatrixMath::Logic::Matrix->identity($self->height);
 
-  return $self.concat_horizontal($identity_matrix)->rref
-
+  my $result = $self->concat_horizontal($identity_matrix)->rref;
+  my $output_width = $result->width / 2;
+  for (my $y = 0; $y < $result->height; $y++) {
+    @{$result->{data}}[$y] = [@{@{$result->{data}}[$y]}[-($output_width) .. -1]]
+  }
+  return $result;
 }
 
 sub to_string {
