@@ -153,31 +153,35 @@ ok(MX([[1, 2], [3, 4]])->is_square, 'is_square returns truthy when matrix is squ
 ok(MX([])->is_square, 'is_square returns truthy when matrix is empty');
 
 #Is Row Equivalent
-ok(MX(
-  [[1, 2, 3],
-   [2, 1, 1],
-   [4, 9, 4]]
- )->is_row_equivalent(
-   MX(
-     [[1, 2, 3],
-      [2, 1, 1],
-      [8, 18, 8]]
-    )
-  ),
-'is_row_equivalent returns true when matrices share row equivilence');
+ok(
+  MX(
+    [[1, 2, 3],
+     [2, 1, 1],
+     [4, 9, 4]]
+   )->is_row_equivalent(
+     MX(
+       [[1, 2, 3],
+        [2, 1, 1],
+        [8, 18, 8]]
+      )
+    ),
+  'is_row_equivalent returns true when matrices share row equivilence'
+ );
 
-ok(!MX(
-  [[1, 2, 3],
-   [2, 1, 1],
-   [4, 9, 4]]
- )->is_row_equivalent(
-   MX(
-     [[1, 2, 3],
-      [1, 2, 3],
-      [1, 2, 3]]
-    )
-  ),
-'is_row_equivalent returns falsey when matrices do not share row equivilence');
+ok(
+  !MX(
+    [[1, 2, 3],
+     [2, 1, 1],
+     [4, 9, 4]]
+   )->is_row_equivalent(
+     MX(
+       [[1, 2, 3],
+        [1, 2, 3],
+        [1, 2, 3]]
+      )
+    ),
+  'is_row_equivalent returns falsey when matrices do not share row equivilence'
+ );
 
 #Augmented
 is_deeply(MX([[1, 2], [3, 4]])->augmented, MX([[1, 2, 0], [3, 4, 0]]), 'augmented adds a zero column to the end of the matrix');
