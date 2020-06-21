@@ -199,7 +199,9 @@ ok(!MX([[1, 2], [2, 4]])->is_invertible, 'is_invertible return falsey when the m
 ok(!MX([[1, 2], [3, 4], [5, 6]])->is_invertible, 'is_invertible return falsey when the matrix can be inverted');
 
 #Inverse
-is_deeply(MX([[1, 2], [3, 4]])->inverse, MX([[-2, 1], [1.5, -0.5]])); # TODO
+is_deeply(MX([[1, 2], [3, 4]])->inverse, MX([[-2, 1], [1.5, -0.5]]), 'inverse returns the inverse matrix');
+is_deeply(MX([[1, 0], [0, 1]])->inverse, MX([[1, 0], [0, 1]]), 'inverse returns the inverse matrix');
+is_deeply(MX([[1, 10], [2, 20]])->inverse, undef, 'inverse returns undef when the matrix cannot be inverted');
 
 done_testing();
 
