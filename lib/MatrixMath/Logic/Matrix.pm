@@ -250,6 +250,41 @@ sub inverse {
   return $result;
 }
 
+sub determinant {
+  my $self = shift;
+  return undef unless $self->is_square;
+  my $height = $self->height;
+
+  return undef if $height < 1;
+
+  if ($height == 1) {
+    return $self->value_at(0, 0) if $height == 1;
+  }
+
+  if ($height == 2) {
+    return ($self->value_at(0, 0) * $self->value_at(1, 1) - $self->value_at(0, 1) * $self->value_at(1, 0))
+  }
+
+  my $copy = $self->copy;
+  my $next_sub;
+  my $det = 0;
+  for (my $y = 0; $y < $height; $y++) {
+    $next_sub = MatrixMath::Logic::Matrix->zero($height - 1);
+    for (my $i = 1; $i < $height; $i++) {
+      my $j2 = 0;
+      for (my $j = 0; $j < $height; $j++) {
+        next if $j == $y;
+        $next_sub->set_value_at($j2, $i - 1, $copy->value_at($j, $i));
+        $j2++;
+      }
+    }
+    # Recurse Here
+    my $switch = ((2 + $y) % 2) ? -1 : 1;
+    $det += ($switch * $copy->value_at($y, 0) * $next_sub->determinant);
+  }
+  return $det;
+}
+
 sub to_string {
   Dumper(shift);
 }

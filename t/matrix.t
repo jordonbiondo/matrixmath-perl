@@ -205,6 +205,50 @@ is_deeply(MX([[1, 2], [3, 4]])->inverse, MX([[-2, 1], [1.5, -0.5]]), 'inverse re
 is_deeply(MX([[1, 0], [0, 1]])->inverse, MX([[1, 0], [0, 1]]), 'inverse returns the inverse matrix');
 is_deeply(MX([[1, 10], [2, 20]])->inverse, undef, 'inverse returns undef when the matrix cannot be inverted');
 
+#Determinant
+is(
+  MX([[1, 2, 3],
+      [2, 1, 1],
+      [4, 9, 4]])->determinant,
+  29,
+  'determinant returns the matrix determinant'
+ );
+
+is(
+  MX([[1, 0],
+      [0, 1]])->determinant,
+  1,
+  'determinant returns the matrix determinant'
+ );
+is(
+  MX([[1, 0, 1],
+      [0, 2, 1],
+      [1, 1, 1]])->determinant,
+  -1,
+  'determinant returns the matrix determinant'
+ );
+is(
+  MX([[3, 2, 3],
+      [2, 23, 1],
+      [4, 9, 4]])->determinant,
+  19,
+  'determinant returns the matrix determinant'
+ );
+is(
+  MX([[3, 2, 3],
+      [2, 23, 1],
+      [9, 9, 4]])->determinant,
+  -316,
+  'determinant returns the matrix determinant'
+ );
+
+is(
+  MX([[3, 2, 3],
+      [2, 23, 1]])->determinant,
+  undef,
+  'determinant returns undef if the matrix has no determinant'
+ );
+
 done_testing();
 
 
