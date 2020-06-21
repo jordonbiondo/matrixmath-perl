@@ -32,8 +32,9 @@ is_deeply(MatrixMath::Logic::Matrix->zero(2, 3), MX([[0, 0], [0, 0], [0, 0]]), '
 is_deeply(MatrixMath::Logic::Matrix->zero(1, 1), MX([[0]]), 'zero constructs a zero filled matrix of the given width and height');
 
 #Identity
-is_deeply(MatrixMath::Logic::Matrix->zero(2, 3), MX([[0, 0], [0, 0], [0, 0]]), 'identity constructs an identity matrix of the given size');
-is_deeply(MatrixMath::Logic::Matrix->zero(1, 1), MX([[0]]), 'identity constructs an identity matrix of the given size');
+is_deeply(MatrixMath::Logic::Matrix->identity(2), MX([[1, 0], [0, 1]]), 'identity constructs an identity matrix of the given size');
+is_deeply(MatrixMath::Logic::Matrix->identity(3), MX([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), 'identity constructs an identity matrix of the given size');
+is_deeply(MatrixMath::Logic::Matrix->identity(1), MX([[1]]), 'identity constructs an identity matrix of the given size');
 
 
 # Value At
