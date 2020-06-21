@@ -30,6 +30,7 @@ is(@{@{$testMatrix->{data}}[1]}[1], 4, 'Constructor populates data');
 #Zero
 is_deeply(MatrixMath::Logic::Matrix->zero(2, 3), MX([[0, 0], [0, 0], [0, 0]]), 'zero constructs a zero filled matrix of the given width and height');
 is_deeply(MatrixMath::Logic::Matrix->zero(1, 1), MX([[0]]), 'zero constructs a zero filled matrix of the given width and height');
+is_deeply(MatrixMath::Logic::Matrix->zero(2), MX([[0, 0], [0, 0]]), 'zero constructs a zero filled matrix of the given size if only one parameter is passed');
 
 #Identity
 is_deeply(MatrixMath::Logic::Matrix->identity(2), MX([[1, 0], [0, 1]]), 'identity constructs an identity matrix of the given size');

@@ -29,7 +29,8 @@ sub new {
 #
 sub zero {
   my $class = shift;
-  my ($width, $height) = (shift, shift);
+  my $width = shift;
+  my $height = shift // $width;
   my $data = [map {[(0) x $width]} 1..$height];
   MatrixMath::Logic::Matrix->new([map {[(0) x $width]} 1..$height]);
 }
