@@ -253,6 +253,31 @@ is(
   'determinant returns undef if the matrix has no determinant'
  );
 
+#Is Linearly Independent
+my $lin_ind_test1 = MX([[1, 1],
+                        [4, 3],
+                        [3, 4]])->is_linearly_independent;
+my $lin_ind_test2 = MX([[1, 1, 1],
+                        [4, 0, 1],
+                        [8, 0, 2]])->is_linearly_independent;
+my $lin_ind_test3 = MX([[1, 1, 1],
+                        [4, 0, 1]])->is_linearly_independent;
+my $lin_ind_test4 = MX([[1, 0],
+                        [0, 1]])->is_linearly_independent;
+my $lin_ind_test5 = MX([[4, 3],
+                        [4, 3],
+                        [4, 3]])->is_linearly_independent;
+
+my $r = MatrixMath::Logic::Matrix->non_linear_independence_reasons;
+is_deeply([@$lin_ind_test1], [1, undef], 'is_linearly_independent returns [1, undef] when matrix is linearly independent and gives no failure reason');
+is_deeply([@$lin_ind_test4], [1, undef], 'is_linearly_independent returns [1, undef] when matrix is linearly independent and gives no failure reason');
+is_deeply([@$lin_ind_test2], [undef, $r->{LINEAR_COMBINATION_DUPLICATE_VECTORS}], 'is_linearly_independent returns undef when matrix is not linearly indepenedent and returns the proper failure reason');
+is_deeply([@$lin_ind_test3], [undef, $r->{R_MISMATCH}], 'is_linearly_independent returns [undef, matching_reason_code] when matrix is not linearly indepenedent');
+is_deeply([@$lin_ind_test5], [undef, $r->{LINEAR_COMBINATION_DUPLICATE_VECTORS}], 'is_linearly_independent returns [undef, matching_reason_code] when matrix is not linearly indepenedent and returns the proper failure reason');
+
+#Get Non Linear Independent Reason
+
+
 done_testing();
 
 

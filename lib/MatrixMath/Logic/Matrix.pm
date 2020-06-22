@@ -7,6 +7,11 @@ use warnings;
 
 use Mojo::Util qw(secure_compare);
 
+
+use constant NON_LINEAR_INDEPENDENCE_REASON => {
+  R_MISMATCH => 1,
+  LINEAR_COMBINATION_DUPLICATE_VECTORS => 2
+ };
 #
 # Constructor, receives matrix data as a 2d array, inner arrays represent rows;
 #
@@ -22,6 +27,10 @@ sub new {
 
   bless $self, $class;
   return $self;
+}
+
+sub non_linear_independence_reasons {
+  return NON_LINEAR_INDEPENDENCE_REASON;
 }
 
 #
@@ -283,6 +292,45 @@ sub determinant {
     $det += ($switch * $copy->value_at($y, 0) * $next_sub->determinant);
   }
   return $det;
+}
+
+sub is_linearly_independent {
+  my $self = shift;
+  if ($self->width > $self->height) {
+    return [undef, NON_LINEAR_INDEPENDENCE_REASON->{R_MISMATCH}];
+  }
+
+  my $reduced = $self->rref;
+
+  if ($reduced->is_square) {
+    if ($reduced->equals(MatrixMath::Logic::Matrix->identity($reduced->height))) {
+      return [1, undef];
+    } else {
+      return [undef, NON_LINEAR_INDEPENDENCE_REASON->{LINEAR_COMBINATION_DUPLICATE_VECTORS}];
+    }
+  }
+
+  my $zero_rows = [grep {_is_zero_row($_)} @{$reduced->{data}}];
+
+  if (scalar(@$zero_rows) > $reduced->height - $self->width) {
+    return [undef, NON_LINEAR_INDEPENDENCE_REASON->{LINEAR_COMBINATION_DUPLICATE_VECTORS}]
+  } else {
+    return [1, undef]
+  }
+}
+
+sub get_non_linear_independence_reason {
+
+  my ($self, $reason_const) = (shift, shift);
+  if ($reason_const == NON_LINEAR_INDEPENDENCE_REASON->{R_MISMATCH}) {
+    return <<"END_REASON"
+The vectors of this matrix are in R@{[$self->height]}, therefore only a set of at most @{[$self->height]} vectors can be linearly independent, however, This matrix has @{[$self->wdith]} vectors. Therefore we know that at least on vectore can be created by a linear combination of the others.
+END_REASON
+  }
+  if ($reason_const == NON_LINEAR_INDEPENDENCE_REASON->{LINEAR_COMBINATION_DUPLICATE_VECTORS}) {
+    return 'At least one vector can be made by a linear combination of the others.';
+  }
+  return '';
 }
 
 sub to_string {
