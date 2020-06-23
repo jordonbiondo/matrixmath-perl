@@ -1,7 +1,6 @@
 #!/bin/bash
-
 #
-# This script will build the base and dev images of mmp and start local containers
+# This script will build a new production image and deploy it to heroku
 #
 
 cd "$(dirname "$0")"
