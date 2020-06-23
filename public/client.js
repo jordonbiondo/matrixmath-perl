@@ -239,6 +239,13 @@ function trySendMatrix() {
     if (!error) {
         $('#computeSpinner').addClass('spin');
         lastSendTime = new Date();
+        // TODO Respond
+        $.ajax(window.MMP.urls.Matrix.compute, {
+            data : JSON.stringify(data),
+            contentType : 'application/json',
+            type : 'POST',
+        });
+
         //socket.emit("compute", {data: data});
     } else {
         //alert("bad input");

@@ -8,4 +8,9 @@ use lib curfile->dirname->sibling('lib')->to_string;
 use Mojolicious::Commands;
 
 # Start command line interface for application
-Mojolicious::Commands->start_app('MatrixMath');
+my $app = Mojolicious::Commands->start_app('MatrixMath');
+
+$app->plugin('DefaultHelpers');
+
+return $app;
+

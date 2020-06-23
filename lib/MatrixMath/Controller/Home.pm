@@ -5,9 +5,7 @@ use Mojo::Log;
 
 sub index_page {
   my $self = shift;
-  $self->render(
-    compute_url => $self->url_for
-   );
+  $self->render();
 }
 
 1;

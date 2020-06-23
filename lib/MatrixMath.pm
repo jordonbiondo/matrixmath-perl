@@ -1,5 +1,6 @@
 package MatrixMath;
 use Mojo::Base 'Mojolicious';
+use MatrixMath::Logic::Matrix;
 
 use Mojo::Pg;
 
