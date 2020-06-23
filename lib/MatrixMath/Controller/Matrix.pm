@@ -8,6 +8,12 @@ sub compute {
 
   my $matrix = MatrixMath::Logic::Matrix->new(decode_json($self->req->body));
 
+  if ($matrix->height > 8 || $matrix->width > 8) {
+    return $self->render(json => {
+      message => "Matrix too large. Max width or height: 8"
+     }, status => 400);
+  }
+
   my $rref = $matrix->rref;
   my $solutions = $rref->number_of_solutions;
   my $solutions_response = {

@@ -243,9 +243,14 @@ $(document).ready(function() {
         tryResizeInput();
         return false;
     });
-    $("#matrixWidthInput, #matrixHeightInput").change(function() {
+    $("#matrixWidthInput, #matrixHeightInput").change(function(e) {
+        if (e.target.value > 8) {
+            $(this).val(3);
+            return false;
+        }
         tryResizeInput();
     });
+
     $("#inputMatrixForm").submit(function() {
         trySendMatrix();
         return false;

@@ -51,7 +51,7 @@
             </div>
             <div class="row">
                 <h4 class="large-offset-1 columns">
-                    Computes the RREF, inverse, and determinant of any n&times;m matrix
+                    Computes the RREF, inverse, and determinant of matrices.
                 </h4>
             </div>
 
