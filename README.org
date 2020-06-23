@@ -1,6 +1,8 @@
 * Matrix Math Perl
 This project is a reimplementation of [[https://github.com/jordonbiondo/matrixmath][matrixmath]] in perl.
 
+The backend has been rewritten in perl, the frontend has been largely untouched and remains in its atrocious historical state, serving as a nice reminder of how far I've come since college. 😁
+
 You can check out the live version [[https://matrix-math-perl.herokuapp.com/][here]].
 
 ** Hacking
