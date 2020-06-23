@@ -44,7 +44,7 @@ function respondToMatrixData (data) {
     fillMatrixTable("#inverseMatrix", data.inverse);
   } else {
     addMatrixInfoLine("This matrix is not invertible because " +
-                      "cannot be reduced to an identity matrix.", false);
+                      "it cannot be reduced to an identity matrix.", false);
     spoofFillMatrix("#inverseMatrix", data.size.height, data.size.width);
   }
 
