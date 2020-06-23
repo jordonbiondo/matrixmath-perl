@@ -5,11 +5,30 @@ use Mojo::Log;
 
 sub compute {
   my $self = shift;
-  # TODO
-  my $log = Mojo::Log->new;
-  my $matrix_data = decode_json($self->req->body);
-  my $matrix = MatrixMath::Logic::Matrix->new($matrix_data);
-  $self->render(json => {foo => 'bar'});
+
+  my $matrix = MatrixMath::Logic::Matrix->new(decode_json($self->req->body));
+
+  my $rref = $matrix->rref;
+  my $solutions = $rref->number_of_solutions;
+  my $solutions_response = {
+    value => (($solutions == 9**9**9) ? -1 : $solutions)
+   };
+
+  my $is_lin_ind = $matrix->is_linearly_independent->[0];
+  my $lin_ind_reason = $matrix->get_non_linear_independence_reason;
+
+  $self->render(json => {
+    matrix => {data => $matrix->{data}},
+    size => $matrix->size,
+    rref => $rref,
+    det => $matrix->determinant,
+    inverse => $matrix->is_invertible ? {data => $matrix->inverse->{data}} : undef,
+    linInd => {
+      isLinearlyIndependent => $is_lin_ind,
+      reason => $lin_ind_reason,
+     },
+    solutions => $solutions_response
+   })
 }
 
 1;

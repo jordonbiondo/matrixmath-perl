@@ -111,10 +111,10 @@ sub width {
 
 sub size {
   my ($self) = (shift);
-  {
+  return {
     height => $self->height,
-      width => $self->width
-    }
+    width => $self->width
+   };
 }
 
 sub size_equals {
