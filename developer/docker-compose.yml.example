@@ -1,0 +1,37 @@
+version: "3"
+
+################
+# Instructions #
+################
+
+# 1. Copy this file to developer/docker-compose.yml, this is your custom, local, gitignored copy.
+# 2. Modify the volumes in developer/docker-compose.yml to match the location of your local clone
+# 3. Run ./developer/build-and-run.sh
+# 4. Navigate to localhost:40000
+# 5. Start hacking!
+
+networks:
+  mmp-dev-net:
+
+services:
+  # The web service
+  mmp:
+    hostname: mmp
+    container_name: mmp
+    image: mmp_dev:latest
+    environment:
+      - FUTURE_ENV=future_env
+    networks:
+      - mmp-dev-net
+    expose:
+      - 80
+    ports:
+      - 40000:80
+    volumes:
+      ## Edit this to the local location of your mmp project
+      - /your/local/path/to/matrixmath-perl/lib:/var/www/mmp/lib
+      - /your/local/path/to/matrixmath-perl/public:/var/www/mmp/public
+      - /your/local/path/to/matrixmath-perl/script:/var/www/mmp/script
+      - /your/local/path/to/matrixmath-perl/t:/var/www/mmp/t
+      - /your/local/path/to/matrixmath-perl/templates:/var/www/mmp/templates
+    restart: always
