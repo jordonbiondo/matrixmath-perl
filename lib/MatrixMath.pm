@@ -17,10 +17,14 @@ sub startup {
   my $r = $self->routes;
 
   # Render the home page
-  $r->get('/')->to('example#welcome');
+  $r->get('/')->to('home#index_page');
 
-  # Post to /compute to analyze matrix
-  $r->post('/compute')->to('example#compute');
+  # API
+  my $api = $r->any('/api');
+
+  # Matrix API
+  my $matrix_api = $api->any('/matrix')->to(controller => 'matrix');
+  $matrix_api->post('/compute')->to(action => 'compute');
 }
 
 1;
