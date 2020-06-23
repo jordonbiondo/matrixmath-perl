@@ -50,7 +50,7 @@ function respondToMatrixData (data) {
 
     var solutionsText = "The system of equations defined by the rows has " + {
         "1": "a unique solution.",
-        "0": "no solution",
+        "0": "no solution.",
         "-1": "infinitely many solutions.",
     }[data.solutions.value];
 
