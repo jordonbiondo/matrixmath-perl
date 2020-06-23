@@ -322,15 +322,33 @@ sub is_linearly_independent {
 sub get_non_linear_independence_reason {
 
   my ($self, $reason_const) = (shift, shift);
+
+  unless (defined $reason_const) {
+    my $result = $self->is_linearly_independent;
+    $reason_const = $result->[1];
+  }
   if ($reason_const == NON_LINEAR_INDEPENDENCE_REASON->{R_MISMATCH}) {
     return <<"END_REASON"
-The vectors of this matrix are in R@{[$self->height]}, therefore only a set of at most @{[$self->height]} vectors can be linearly independent, however, This matrix has @{[$self->wdith]} vectors. Therefore we know that at least on vectore can be created by a linear combination of the others.
+The vectors of this matrix are in R@{[$self->height]}, therefore only a set of at most @{[$self->height]} vectors can be linearly independent, however, This matrix has @{[$self->width]} vectors. Therefore we know that at least one vector can be created by a linear combination of the others.
 END_REASON
   }
   if ($reason_const == NON_LINEAR_INDEPENDENCE_REASON->{LINEAR_COMBINATION_DUPLICATE_VECTORS}) {
     return 'At least one vector can be made by a linear combination of the others.';
   }
   return '';
+}
+
+sub number_of_solutions {
+  my $self = shift;
+  my $reduced = $self->rref;
+  my $var_n = $self->width - 1;
+  my $eq_n = $self->height;
+
+  return 0 if (scalar(grep {_is_no_solution_row($_)} @{$reduced->{data}}) > 0);
+
+  return "Inf" if (scalar(grep {_is_zero_row $_} @{$reduced->{data}}) > ($eq_n - $var_n));
+
+  return 1;
 }
 
 sub to_string {

@@ -276,7 +276,63 @@ is_deeply([@$lin_ind_test3], [undef, $r->{R_MISMATCH}], 'is_linearly_independent
 is_deeply([@$lin_ind_test5], [undef, $r->{LINEAR_COMBINATION_DUPLICATE_VECTORS}], 'is_linearly_independent returns [undef, matching_reason_code] when matrix is not linearly indepenedent and returns the proper failure reason');
 
 #Get Non Linear Independent Reason
+is(
+  ((MX([[1, 1, 1],
+        [4, 0, 1],
+        [8, 0, 2]])->get_non_linear_independence_reason($r->{LINEAR_COMBINATION_DUPLICATE_VECTORS}))),
+  'At least one vector can be made by a linear combination of the others.',
+  '->get_non_linear_independence_reason returns the correct description of why a matrix is non linearly independent'
+ );
 
+#Get Non Linear Independent Reason
+is(
+  ((MX([[1, 1, 1],
+        [4, 0, 1],
+        [8, 0, 2]])->get_non_linear_independence_reason($r->{R_MISMATCH}))),
+  "The vectors of this matrix are in R3, therefore only a set of at most 3 vectors can be linearly independent, however, This matrix has 3 vectors. Therefore we know that at least one vector can be created by a linear combination of the others.\n",
+  '->get_non_linear_independence_reason returns the correct description of why a matrix is non linearly independent'
+ );
+is(
+  ((MX([[1, 1, 1],
+        [4, 0, 1],
+        [8, 0, 2]])->get_non_linear_independence_reason)),
+  'At least one vector can be made by a linear combination of the others.',
+  '->get_non_linear_independence_reason computes the reason if no reason code is supplied',
+ );
+
+#Number of Solutions
+is(
+  MatrixMath::Logic::Matrix->identity(3)->number_of_solutions,
+  0,
+  '->number_of_solutions returns zero when the matrix has no solution'
+ );
+is(
+  MX([[1, 1],
+      [2, 3],
+      [4, 5]])->number_of_solutions,
+  0,
+  '->number_of_solutions returns zero when the matrix has no solution'
+ );
+is(
+  MX([[0, 0],
+      [0, 0],
+      [0, 0]])->number_of_solutions,
+  9**9**9, # infinity
+  '->number_of_solutions returns infinity when then matrix has infinite solutions'
+ );
+
+is(
+  MatrixMath::Logic::Matrix->zero(2, 3)->number_of_solutions,
+  9**9**9, # infinity
+  '->number_of_solutions returns infinity when then matrix has infinite solutions'
+ );
+
+is(
+ MX([[1, 2, 3],
+      [4, 5, 6]])->number_of_solutions,
+  1, # infinity
+  '->number_of_solutions returns 1 when then matrix has one solution'
+ );
 
 done_testing();
 
