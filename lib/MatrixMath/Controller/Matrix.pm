@@ -20,7 +20,7 @@ sub compute {
   $self->render(json => {
     matrix => {data => $matrix->{data}},
     size => $matrix->size,
-    rref => $rref,
+    rref => {data => $rref->{data}},
     det => $matrix->determinant,
     inverse => $matrix->is_invertible ? {data => $matrix->inverse->{data}} : undef,
     linInd => {

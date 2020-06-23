@@ -1,32 +1,4 @@
 /*global $ io _*/
-/* client.js ---
- *
- * Filename: client.js
- * Author: Jordon Biondo
- * Maintainer: Jordon Biondo <biondoj@mail.gvsu.edu>
- * Created: Tue Dec  3 21:37:29 2013 (-0500)
- * Version: 0.1.0
- * Last-Updated: Tue Dec  3 21:39:58 2013 (-0500)
- *           By: Jordon Biondo
- *     Update #: 5
- * URL: github.com/jordonbiondo/matrixmath
- */
-
-/* This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 3, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street, Fifth
- * Floor, Boston, MA 02110-1301, USA.
- */
 
 /* Code: */
 
@@ -35,54 +7,60 @@ var defaultMatrixHeight = 3;
 
 var lastSendTime;
 
-//var socket;
-
-// socket = io.connect();
-
-// socket.on("matrixError", function(error) {
-//   $("#myErrorAlert").fadeTo(200, 1);
-//   $('html, body').animate({
-//     scrollTop: $("#myErrorAlert").offset().top
-//   }, 1000);
-// });
+function respondToMatrixError (error) {
+  $("#myErrorAlert").fadeTo(200, 1);
+  $('html, body').animate({
+    scrollTop: $("#myErrorAlert").offset().top
+  }, 1000);
+};
 
 
-// socket.on("matrixFill", function(data) {
-//   if (new Date() - lastSendTime > (.4 * 1000)) {
-//     $('#computeSpinner').removeClass('spin');
-//   } else {
-//     setTimeout(function() {
-//       $('#computeSpinner').removeClass('spin');
-//     }, 400);;
-//   }
+function respondToMatrixData (data) {
+  if (new Date() - lastSendTime > (.4 * 1000)) {
+    $('#computeSpinner').removeClass('spin');
+  } else {
+    setTimeout(function() {
+      $('#computeSpinner').removeClass('spin');
+    }, 400);;
+  }
 
-//   $('html, body').animate({
-//     scrollTop: $("#outputStart").offset().top
-//   }, 1000);
+  $('html, body').animate({
+    scrollTop: $("#outputStart").offset().top
+  }, 1000);
 
-//   $("#matrixInfo").empty();
-//   $("#detValue").val((data.det !== null) ? data.det : "Not possible");
-//   fillMatrixTable("#rrefMatrix", data.rref);
-//   if (data.linInd === true) {
-//     addMatrixInfoLine("The column vectors of this matrix are linearly independent! ", true);
-//   } else {
-//     addMatrixInfoLine("The column vectors of this matrix are not linearly independent. "
-//         + data.linInd, false);
-//   }
-//   if (data.inverse) {
-//     addMatrixInfoLine("This matrix is invertible because it " +
-//                       "reduces to the identity matrix.", true);
+  $("#matrixInfo").empty();
+  $("#detValue").val((data.det !== null) ? data.det : "Not possible");
+  fillMatrixTable("#rrefMatrix", data.rref);
+  if (data.linInd.isLinearlyIndependent) {
+    addMatrixInfoLine("The column vectors of this matrix are linearly independent! ", true);
+  } else {
+    addMatrixInfoLine("The column vectors of this matrix are not linearly independent. "
+        + data.linInd.reason, false);
+  }
+  if (data.inverse) {
+    addMatrixInfoLine("This matrix is invertible because it " +
+                      "reduces to the identity matrix.", true);
 
-//     fillMatrixTable("#inverseMatrix", data.inverse);
-//   } else {
-//     addMatrixInfoLine("This matrix is not invertible because " +
-//                       "cannot be reduced to an identity matrix.", false);
-//     spoofFillMatrix("#inverseMatrix", data.size.height, data.size.width);
-//   }
+    fillMatrixTable("#inverseMatrix", data.inverse);
+  } else {
+    addMatrixInfoLine("This matrix is not invertible because " +
+                      "cannot be reduced to an identity matrix.", false);
+    spoofFillMatrix("#inverseMatrix", data.size.height, data.size.width);
+  }
 
-//   addMatrixInfoLine(data.solutions.text, (data.solutions.value !== 0));
-//   addMatrixInfoLine(data.consistent.text, (data.consistent.value));
-// });
+    var solutionsText = "The system of equations defined by the rows has " + {
+        "1": "a unique solution.",
+        "0": "no solution",
+        "-1": "infinitely many solutions.",
+    }[data.solutions.value];
+
+  addMatrixInfoLine(solutionsText, (data.solutions.value !== 0));
+
+    var consistentText = "This matrix defines a" +
+	((data.solutions.value !== 0) ? " consistent" : "n inconsistent") +
+	" system of equations.";
+  addMatrixInfoLine(consistentText, (data.solutions.value !== 0));
+};
 
 
 
@@ -239,22 +217,21 @@ function trySendMatrix() {
     if (!error) {
         $('#computeSpinner').addClass('spin');
         lastSendTime = new Date();
-        // TODO Respond
-        $.ajax(window.MMP.urls.Matrix.compute, {
-            data : JSON.stringify(data),
-            contentType : 'application/json',
-            type : 'POST',
-        });
+        $
+            .ajax(window.MMP.urls.Matrix.compute, {
+                data : JSON.stringify(data),
+                contentType : 'application/json',
+                type : 'POST',
+            })
+            .then((response, a, b) => {
+                respondToMatrixData(response);
+            })
+            .fail((error) => {
+                respondToMatrixError(error);
+            })
 
-        //socket.emit("compute", {data: data});
     } else {
-        //alert("bad input");
         $("#myAlert").fadeTo(200, 1);
-        /* $("#badInputModal").modal({
-           show: true,
-           keyboard: true,
-           backdrop: true
-           }); */
     }
 }
 
