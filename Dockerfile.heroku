@@ -9,5 +9,11 @@ WORKDIR /var/www/mmp
 # TODO figure out why --deployment flag fails
 RUN carton install
 COPY matrix_math.conf /var/www/mmp/
+
+COPY templates /var/www/mmp/templates
+COPY script /var/www/mmp/script
+COPY public /var/www/mmp/public
+COPY lib /var/www/mmp/lib
+
 WORKDIR /var/www/mmp
-CMD carton exec -- morbo -l http://*:$PORT script/matrixmath
+CMD carton exec -- hypnotoad -f script/matrixmath
