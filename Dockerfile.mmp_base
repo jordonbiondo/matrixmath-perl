@@ -1,17 +1,10 @@
 FROM perl:5.26.3
-
 RUN curl -L https://cpanmin.us | perl - App::cpanminus
-
 RUN cpanm Carton
-
 RUN mkdir -p /var/www/mmp
-
 COPY cpanfile /var/www/mmp/
 COPY cpanfile.snapshot /var/www/mmp/
-
 WORKDIR /var/www/mmp
-
 # TODO figure out why --deployment flag fails
 RUN carton install
-
 COPY matrix_math.conf /var/www/mmp/

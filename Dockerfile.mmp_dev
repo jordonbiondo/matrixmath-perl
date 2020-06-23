@@ -1,5 +1,3 @@
 FROM mmp_base:latest
-
 WORKDIR /var/www/mmp
-
 CMD bash -c 'carton exec -- morbo -l http://*:80 script/matrixmath'
