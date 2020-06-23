@@ -10,4 +10,4 @@ WORKDIR /var/www/mmp
 RUN carton install
 COPY matrix_math.conf /var/www/mmp/
 WORKDIR /var/www/mmp
-CMD bash -c 'carton exec -- morbo -l http://*:80 script/matrixmath'
+CMD carton exec -- morbo -l http://*:$PORT script/matrixmath
