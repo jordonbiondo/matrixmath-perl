@@ -1,0 +1,15 @@
+* Matrix Math Perl
+This project is a reimplementation of [[https://github.com/jordonbiondo/matrixmath][matrixmath]] in perl.
+
+You can check out the live version [[https://matrix-math-perl.herokuapp.com/][here]].
+
+** Hacking
+   1. Install Docker
+   2. Clone this repository
+   3. Follow the instructions in ./developer/docker-compose.yml.example
+   4. Run ./developer/build-and-run.sh
+   5. Navigate to localhost:40000 to view the app
+   6. Start Hackin'
+
+** Tests
+   Currently, tests are run by ~carton exec~-ing ~prove~ inside the development docker container from /var/www/mmp/.
